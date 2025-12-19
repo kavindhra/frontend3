@@ -2,29 +2,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-// Create this file or add to global styles
+import './Wishlist.css';
 
 const Wishlist = () => {
   const { wishlist, removeFromWishlist, addToCart, getTotalWishlistItems } = useCart();
+
+  const handleAddToCart = (product) => {
+    addToCart(product);
+  };
 
   const handleRemove = (id) => {
     removeFromWishlist(id);
   };
 
-  const handleAddToCart = (product) => {
-    addToCart(product);
-    // Optional: auto-remove from wishlist after adding to cart
-    // removeFromWishlist(product.id);
-  };
-
   if (getTotalWishlistItems() === 0) {
     return (
       <section className="wishlist-empty">
-        <div className="wishlist-container">
-          <h1>Your Wishlist is Empty ❤️</h1>
-          <p>Looks like you haven't added anything to your wishlist yet.</p>
+        <div className="empty-content">
+          <h1>Your Wishlist is Empty</h1>
+          <p>Save products you love for later</p>
           <Link to="/products">
-            <button className="continue-shopping-btn">Continue Shopping</button>
+            <button className="continue-shopping-btn">Browse Products</button>
           </Link>
         </div>
       </section>
@@ -33,9 +31,11 @@ const Wishlist = () => {
 
   return (
     <section className="wishlist">
-      <div className="wishlist-container">
-        <h1>My Wishlist ({getTotalWishlistItems()} items)</h1>
+      <div className="wishlist-header">
+        <h1>My Wishlist ({getTotalWishlistItems()})</h1>
+      </div>
 
+      <div className="wishlist-container">
         <div className="wishlist-grid">
           {wishlist.map((product) => (
             <div key={product.id} className="wishlist-item-card">
@@ -48,11 +48,9 @@ const Wishlist = () => {
                   <h3>{product.name}</h3>
                 </Link>
 
-                <p className="wishlist-item-category">{product.category}</p>
-
-                <div className="wishlist-item-price">
-                  <strong>₹{product.price.toLocaleString('en-IN')}</strong>
-                </div>
+                <p className="wishlist-item-price">
+                  ₹{product.price.toLocaleString('en-IN')}
+                </p>
 
                 <div className="wishlist-item-actions">
                   <button
@@ -61,7 +59,6 @@ const Wishlist = () => {
                   >
                     Add to Cart
                   </button>
-
                   <button
                     className="remove-btn"
                     onClick={() => handleRemove(product.id)}
